@@ -20,7 +20,7 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       home_team_goals: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       away_team: {
@@ -34,11 +34,11 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       away_team_goals: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       in_progress: {
-        type: Sequelize.STRING,
+        type: Sequelize.BOOLEAN,
         allowNull: false,
       }
     })
