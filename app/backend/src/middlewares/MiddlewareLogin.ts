@@ -24,7 +24,6 @@ export const validateToken = async (req: Request, res: Response) => {
     res.locals.user = verify;
     const { user } = res.locals.user;
     const { role } = user;
-    console.log(role);
     return res.status(200).json({ role });
   }
   return res.status(401).json({ message: 'Token not found' });
