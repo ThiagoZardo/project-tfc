@@ -1,25 +1,27 @@
-import Sinon, * as sinon from 'sinon';
+import * as Sinon from 'sinon';
 import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
+
 import { app } from '../app';
 // import Example from '../database/models/ExampleModel';
-// import { Response } from 'superagent';
-import { Ilogin } from '../interfaces/Ilogin';
 import Login from '../database/models/login.model'
+import ILogin from '../interfaces/ILogin';
+
+import { Response } from 'superagent';
 
 chai.use(chaiHttp);
-
 const { expect } = chai;
 
-const userUnauthorized: Ilogin = {
+
+const userUnauthorized: ILogin = {
   email: "usuarionaocadastrado",
   password: "123456"
 }
 
-const userAuthorized: Ilogin = {
+const userAuthorized: ILogin = {
   email: "user@user.com",
-  password: "$2a$08$Y8Abi8jXvsXyqm.rmp0B.uQBA5qUz7T6Ghlg/CvVr/gLxYj5UAZVO"
+  password: "secret_user"
 }
 
 describe('Login', () => {

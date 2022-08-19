@@ -1,11 +1,23 @@
+import bcrypt = require('bcryptjs');
 import LoginModel from '../database/models/login.model';
+import ILogin from '../interfaces/ILogin';
+import { generateToken } from '../utils/jwt';
 
-class LoginService {
-  static async login(email: string, password: string) {
-    const loginSuccessfully = await LoginModel.findOne({ where: { email, password } });
-    console.log(loginSuccessfully);
-    return loginSuccessfully;
+export default class LoginService implements ILogin {
+  constructor(private loginModel = LoginModel) {}
+  async login(email: string, password: string): Promise<string> {
+    const emailUser = await this.loginModel.findOne({ where: { email } });
+    if (emailUser && bcrypt.compareSync(password, emailUser.password) === true) {
+      const { id, username, role } = emailUser;
+      const user = {
+        id,
+        username,
+        role,
+        email,
+      };
+      const token = await generateToken(user);
+      return token;
+    }
+    return 'Incorrect email or password';
   }
 }
-
-export default LoginService;

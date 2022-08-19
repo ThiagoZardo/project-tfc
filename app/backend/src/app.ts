@@ -1,4 +1,5 @@
 import * as express from 'express';
+import * as cors from 'cors';
 import routerLogin from './routes/routerLogin';
 
 class App {
@@ -6,6 +7,8 @@ class App {
 
   constructor() {
     this.app = express();
+    this.app.use(express.json());
+    this.app.use(cors());
 
     this.config();
 
@@ -21,7 +24,6 @@ class App {
       next();
     };
 
-    this.app.use(express.json());
     this.app.use(accessControl);
     this.app.use('/login', routerLogin);
   }

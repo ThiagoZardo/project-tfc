@@ -4,6 +4,9 @@ import db from '.';
 class Login extends Model {
   email: string;
   password: string;
+  id?: number;
+  username: string;
+  role: string;
 }
 
 Login.init({
