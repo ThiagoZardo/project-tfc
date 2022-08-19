@@ -1,11 +1,7 @@
 import * as jwt from 'jsonwebtoken';
-// import * as dotenv from 'dotenv';
 import { UserPasswordHiden } from '../interfaces/ILogin';
 
-// dotenv.config();
-
 const JWT_SECRET = process.env.JWT_SECRET || 'jwt_secret';
-// const { JWT_SECRET } = process.env;
 
 export const verifyToken = (token: string) => {
   const validate = jwt.verify(token, JWT_SECRET);
