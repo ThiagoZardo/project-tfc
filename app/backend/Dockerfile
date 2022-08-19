@@ -4,6 +4,6 @@ WORKDIR /app-backend
 
 COPY . .
 
-RUN npx install
+RUN npm install
 
 CMD ["npm", "start"]
