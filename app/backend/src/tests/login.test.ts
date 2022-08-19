@@ -4,23 +4,10 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-// import Example from '../database/models/ExampleModel';
 import Login from '../database/models/login.model'
-import ILogin from '../interfaces/ILogin';
-
-import { Response } from 'superagent';
 
 chai.use(chaiHttp);
 const { expect } = chai;
-
-
-const dataValues = {
-  id: 1,
-  username: 'Admin',
-  role: 'admin',
-  email: 'admin@admin.com',
-  password: '$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW'
-}
 
 describe('Tests Login', () => {
   it('1. Caso usuário não esteja cadastrado retorna não autorizado', async () => {
@@ -44,12 +31,12 @@ describe('Tests Login', () => {
     Sinon.restore();
   });
 
-  it('3. Valida se o email esta no formato correto', async () => {
+  it('3. Caso email não esteja no formato correto retorna status 401', async () => {
     const userUnauthorized = {
       email: "qualquercoisa",
       password: "secret_admin"
     }
     const response = await chai.request(app).post('/login').send(userUnauthorized);
-    expect(response.status).to.be.eq(200);
+    expect(response.status).to.be.eq(401);
   })
 });

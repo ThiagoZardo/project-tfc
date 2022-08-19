@@ -7,6 +7,13 @@ export default class TeamsController {
 
   async listAll(req: Request, res: Response) {
     const teams = await this.teamsService.listAll();
+    console.log(teams);
     return res.status(200).json(teams);
+  }
+
+  async findById(req: Request, res: Response) {
+    const id = parseInt(req.params.id, 10);
+    const team = await this.teamsService.findById(id);
+    res.status(200).json(team);
   }
 }
