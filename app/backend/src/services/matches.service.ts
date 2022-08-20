@@ -39,7 +39,6 @@ export default class MatchesService implements IMatches<MatchesModel> {
       awayTeamGoals,
       inProgress: true,
     });
-    console.log(matcheCreated);
     return matcheCreated as MatchesModel;
   }
 

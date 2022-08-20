@@ -26,5 +26,5 @@ export const validateToken = async (req: Request, res: Response) => {
     const { role } = user;
     return res.status(200).json({ role });
   }
-  return res.status(401).json({ message: 'Token not found' });
+  return res.status(401).json({ message: 'Token must be a valid token' });
 };
