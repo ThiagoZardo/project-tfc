@@ -6,7 +6,6 @@ const validateToken = async (req: Request, res: Response, next: NextFunction) =>
   if (token) {
     try {
       const verify = verifyToken(token);
-      console.log('VERIFYYY', verify);
       if (verify) {
         res.locals.user = verify;
         return next();

@@ -1,4 +1,3 @@
-import { Op } from 'sequelize';
 import Teams from '../database/models/teams.model';
 import MatchesModel from '../database/models/matches.model';
 import IMatches, { INewMatches } from '../interfaces/IMatches';
