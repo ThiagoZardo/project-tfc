@@ -20,4 +20,10 @@ export default class MatchesController {
     const newMatche = await this.matchesService.create(matche);
     return res.status(201).json(newMatche);
   }
+
+  async matchInProgress(req: Request, res: Response) {
+    const id = parseInt(req.params.id, 10);
+    const finishMatch = await this.matchesService.matchInProgress(id);
+    return res.status(200).json({ message: finishMatch });
+  }
 }

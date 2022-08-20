@@ -10,5 +10,10 @@ const routerMatches = Router();
 
 routerMatches.get('/', (req, res) => matchesController.listAll(req, res));
 routerMatches.post('/', validateToken, (req, res) => matchesController.create(req, res));
+routerMatches.patch(
+  '/:id/finish',
+  validateToken,
+  (req, res) => matchesController.matchInProgress(req, res),
+);
 
 export default routerMatches;

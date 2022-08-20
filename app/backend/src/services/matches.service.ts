@@ -40,4 +40,13 @@ export default class MatchesService implements IMatches<MatchesModel> {
     });
     return matcheCreated as MatchesModel;
   }
+
+  async matchInProgress(id: number): Promise<string> {
+    const response = await this.matchesModel.update(
+      { inProgress: false },
+      { where: { id } },
+    );
+    console.log(response);
+    return 'Finished';
+  }
 }
