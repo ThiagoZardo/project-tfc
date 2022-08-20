@@ -14,5 +14,5 @@ routerMatches.patch(
   '/:id/finish',
   (req, res) => matchesController.matchInProgress(req, res),
 );
-
+routerMatches.patch('/:id', (req, res) => matchesController.matchUptade(req, res));
 export default routerMatches;

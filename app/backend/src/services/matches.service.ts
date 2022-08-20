@@ -42,10 +42,21 @@ export default class MatchesService implements IMatches<MatchesModel> {
   }
 
   async matchInProgress(id: number): Promise<string> {
-    await this.matchesModel.update(
+    const match = await this.matchesModel.update(
       { inProgress: false },
       { where: { id } },
     );
+    console.log(match);
     return 'Finished';
+  }
+
+  async matchUptade(id: number, homeTeamGoals: number, awayTeamGoals: number): Promise<void> {
+    await this.matchesModel.update(
+      {
+        homeTeamGoals,
+        awayTeamGoals,
+      },
+      { where: { id } },
+    );
   }
 }

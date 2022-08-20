@@ -34,4 +34,11 @@ export default class MatchesController {
     const finishMatch = await this.matchesService.matchInProgress(id);
     return res.status(200).json({ message: finishMatch });
   }
+
+  async matchUptade(req: Request, res: Response) {
+    const id = parseInt(req.params.id, 10);
+    const { homeTeamGoals, awayTeamGoals } = req.body;
+    await this.matchesService.matchUptade(id, homeTeamGoals, awayTeamGoals);
+    return res.status(200).json(req.body);
+  }
 }
