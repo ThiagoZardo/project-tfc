@@ -3,7 +3,7 @@ import IMatches from '../interfaces/IMatches';
 import MatchesModel from '../database/models/matches.model';
 
 export default class MatchesController {
-  constructor(private matchesService: IMatches<MatchesModel>) {}
+  constructor(private matchesService: IMatches<MatchesModel>) { }
 
   async listAll(req: Request, res: Response) {
     const q = req.query.inProgress as string;
@@ -19,11 +19,14 @@ export default class MatchesController {
     const matche = req.body;
     if (matche.homeTeam === matche.awayTeam) {
       return res.status(401).json({
-        message: 'It is not possible to create a match with two equal teams',
-      });
+        message: 'It is not possible to create a match with two equal teams' });
     }
-    const newMatche = await this.matchesService.create(matche);
-    return res.status(201).json(newMatche);
+    try {
+      const newMatche = await this.matchesService.create(matche);
+      return res.status(201).json(newMatche);
+    } catch (error) {
+      return res.status(404).json({ message: 'There is no team with such id!' });
+    }
   }
 
   async matchInProgress(req: Request, res: Response) {

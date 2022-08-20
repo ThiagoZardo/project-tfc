@@ -10,7 +10,7 @@ const validateToken = async (req: Request, res: Response, next: NextFunction) =>
       return next();
     }
   }
-  return res.status(200).json({ message: 'Token not Found' });
+  return res.status(401).json({ message: 'Token must be a valid token' });
 };
 
 export default validateToken;

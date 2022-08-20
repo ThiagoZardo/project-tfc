@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import Teams from '../database/models/teams.model';
 import MatchesModel from '../database/models/matches.model';
 import IMatches, { INewMatches } from '../interfaces/IMatches';
@@ -38,15 +39,15 @@ export default class MatchesService implements IMatches<MatchesModel> {
       awayTeamGoals,
       inProgress: true,
     });
+    console.log(matcheCreated);
     return matcheCreated as MatchesModel;
   }
 
   async matchInProgress(id: number): Promise<string> {
-    const response = await this.matchesModel.update(
+    await this.matchesModel.update(
       { inProgress: false },
       { where: { id } },
     );
-    console.log(response);
     return 'Finished';
   }
 }
