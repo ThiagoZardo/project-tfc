@@ -23,6 +23,23 @@ export interface IstaticMatches {
   goalsOwn: number[],
 }
 
+export interface IstaticMatchesTeamAway {
+  awayTeam: string | undefined;
+  awayTeamGoals: number;
+  homeTeams: number | undefined;
+  homeTeamGoals: number;
+}
+
+export interface ITotalsStaticMatchesTeamAway {
+  name: string | undefined;
+  pointsVictory: number[];
+  totalGames: number;
+  pointsDraw: number[];
+  loss: number[];
+  goalsFavor: number[];
+  goalsOwn: number[];
+}
+
 export interface ITotalsStaticMatches {
   name?: string,
   totalPoints: number,

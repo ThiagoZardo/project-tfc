@@ -5,11 +5,20 @@ export default interface ITeams<T> {
   findById(id: number): Promise<T>
 }
 
-export interface InfoTeams {
+export interface InfoTeamsHome {
   homeTeam?: number,
   homeTeamGoals: number,
   awayTeam?: number,
   awayTeamGoals: number,
   teamHome?: { id?: number, teamName?: string },
+  homeTeams?: string,
+}
+
+export interface InfoTeamsAway {
+  homeTeam?: number,
+  homeTeamGoals: number,
+  awayTeam?: number,
+  awayTeamGoals: number,
+  teamAway?: { id?: number, teamName?: string },
   homeTeams?: string,
 }
