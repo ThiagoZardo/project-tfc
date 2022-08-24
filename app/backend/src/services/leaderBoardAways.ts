@@ -71,11 +71,11 @@ export default class LeaderBoardAwaysTeams {
   }
 
   public static totalsTeamsHome(totals: ITotalsStaticMatches[]) {
-    const setPerson = new Set();
+    const setTeam = new Set();
 
     const filterTeams = totals.filter((team) => {
-      const duplicatedNameTeam = setPerson.has(team.name);
-      setPerson.add(team.name);
+      const duplicatedNameTeam = setTeam.has(team.name);
+      setTeam.add(team.name);
       return !duplicatedNameTeam;
     });
 
