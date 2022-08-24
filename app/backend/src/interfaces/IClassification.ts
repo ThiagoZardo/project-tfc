@@ -31,3 +31,15 @@ export interface Iclass {
   goalsBalance: number,
   efficiency?: string,
 }
+
+export interface IclassTotals {
+  name?: string,
+  totalPoints: number[],
+  totalGames: number[],
+  totalVictories: number[],
+  totalDraws: number[],
+  totalLosses: number[],
+  goalsFavor: number[],
+  goalsOwn: number[],
+  goalsBalance: number[],
+}

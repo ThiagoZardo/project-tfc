@@ -1,21 +1,8 @@
-/* eslint-disable max-lines-per-function */
 import MatchesModel from '../database/models/matches.model';
 import TeamsModel from '../database/models/teams.model';
 import LeaderBoardAwaysTeams from './leaderBoardAways';
 import LeaderBoardHomeTeams from './leaderBoardHome';
-import { Iclass } from '../interfaces/IClassification';
-
-export interface IclassTotals {
-  name?: string,
-  totalPoints: number[],
-  totalGames: number[],
-  totalVictories: number[],
-  totalDraws: number[],
-  totalLosses: number[],
-  goalsFavor: number[],
-  goalsOwn: number[],
-  goalsBalance: number[],
-}
+import { Iclass, IclassTotals } from '../interfaces/IClassification';
 
 export default class LeaderBoardAllTeams {
   constructor(private matchesModel = MatchesModel) {}
