@@ -14,7 +14,6 @@ export default class LeaderBoardHomeTeams {
       where: { inProgress: false },
     });
     const retorno = LeaderBoardHomeTeams.getInfoMatchesHomeTeams(homeTeams);
-    console.log(homeTeams);
     return retorno;
   }
 
@@ -80,53 +79,15 @@ export default class LeaderBoardHomeTeams {
       ...el,
       efficiency: ((el.totalPoints / (el.totalGames * 3)) * 100).toFixed(2),
     }));
-    console.log(total);
     LeaderBoardHomeTeams.generateClassification(total);
     return total;
   }
 
   public static generateClassification(total: ITotalsStaticMatches[]) {
-    const classificationPoints = total.sort((a, b) => {
-      if (a.totalPoints > b.totalPoints) return -1;
-      if (a.totalPoints < b.totalPoints) return 1;
-      return 0;
-    });
-    return LeaderBoardHomeTeams.dismemberGoasBalance(classificationPoints);
-  }
-
-  public static dismemberGoasBalance(classificationPoints: ITotalsStaticMatches[]) {
-    const classificationgoalsBalance = classificationPoints.sort((a, b) => {
-      if (a.totalPoints === b.totalPoints) {
-        if (a.goalsBalance > b.goalsBalance) return -1;
-        if (a.goalsBalance < b.goalsBalance) return 1;
-      }
-      return 0;
-    });
-    return LeaderBoardHomeTeams.dismemberGoalsFavor(classificationgoalsBalance);
-  }
-
-  public static dismemberGoalsFavor(classificationgoalsBalance: ITotalsStaticMatches[]) {
-    const orderGoalsFavor = classificationgoalsBalance.sort((a, b) => {
-      if (a.totalPoints === b.totalPoints && a.goalsBalance === b.goalsBalance) {
-        if (a.goalsFavor > b.goalsFavor) return -1;
-        if (a.goalsFavor < b.goalsFavor) return 1;
-      }
-      return 0;
-    });
-    return LeaderBoardHomeTeams.dismemberGoalsOwn(orderGoalsFavor);
-  }
-
-  public static dismemberGoalsOwn(orderGoalsFavor: ITotalsStaticMatches[]) {
-    const orderGoalsOwn = orderGoalsFavor.sort((a, b) => {
-      if (a.totalPoints === b.totalPoints && a.goalsBalance === b.goalsBalance) {
-        if (a.goalsFavor === b.goalsFavor) {
-          if (a.goalsOwn > b.goalsOwn) return 1;
-          if (a.goalsOwn < b.goalsOwn) return -1;
-        }
-        return 0;
-      }
-      return 0;
-    });
-    return orderGoalsOwn;
+    const classificationPoints = total.sort((a, b) => b.totalPoints - a.totalPoints
+      || b.goalsBalance - a.goalsBalance
+      || b.goalsFavor - a.goalsFavor
+      || a.goalsOwn - b.goalsOwn);
+    return classificationPoints;
   }
 }

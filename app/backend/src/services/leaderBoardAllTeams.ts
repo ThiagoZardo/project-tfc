@@ -11,7 +11,7 @@ export default class LeaderBoardAllTeams {
   constructor(private matchesModel = MatchesModel) {}
 
   public async listAllTeams() {
-    const homeTeams = await this.matchesModel.findAll({
+    await this.matchesModel.findAll({
       include: [
         { model: TeamsModel, as: 'teamHome' },
         { model: TeamsModel, as: 'teamAway' },
@@ -19,7 +19,6 @@ export default class LeaderBoardAllTeams {
       where: { inProgress: false },
     });
     // const retorno = LeaderBoardAllTeams.getInfoMatchesHomeTeams(homeTeams);
-    console.log(homeTeams);
     // return retorno;
   }
 
@@ -85,7 +84,6 @@ export default class LeaderBoardAllTeams {
       ...el,
       efficiency: ((el.totalPoints / (el.totalGames * 3)) * 100).toFixed(2),
     }));
-    console.log(total);
     LeaderBoardAllTeams.generateClassification(total);
     return total;
   }
