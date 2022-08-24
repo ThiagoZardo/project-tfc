@@ -1,77 +1,71 @@
+/* eslint-disable max-lines-per-function */
 import MatchesModel from '../database/models/matches.model';
 import TeamsModel from '../database/models/teams.model';
-import { InfoTeamsAway } from '../interfaces/ITeams';
-import {
-  IstaticMatches,
-  ITotalsStaticMatches,
-  IstaticMatchesTeamAway,
-} from '../interfaces/IMatches';
+import LeaderBoardAwaysTeams from './leaderBoardAways';
+import LeaderBoardHomeTeams from './leaderBoardHome';
+import { Iclass } from '../interfaces/IClassification';
+
+export interface IclassTotals {
+  name?: string,
+  totalPoints: number[],
+  totalGames: number[],
+  totalVictories: number[],
+  totalDraws: number[],
+  totalLosses: number[],
+  goalsFavor: number[],
+  goalsOwn: number[],
+  goalsBalance: number[],
+}
 
 export default class LeaderBoardAllTeams {
   constructor(private matchesModel = MatchesModel) {}
 
   public async listAllTeams() {
-    await this.matchesModel.findAll({
+    const matches = await this.matchesModel.findAll({
       include: [
         { model: TeamsModel, as: 'teamHome' },
         { model: TeamsModel, as: 'teamAway' },
       ],
       where: { inProgress: false },
     });
-    // const retorno = LeaderBoardAllTeams.getInfoMatchesHomeTeams(homeTeams);
-    // return retorno;
+    const classHome = LeaderBoardHomeTeams.getInfoMatchesHomeTeams(matches);
+    const classAlway = LeaderBoardAwaysTeams.getInfoMatchesAwayTeams(matches);
+    const teams = classHome.concat(classAlway);
+
+    return LeaderBoardAllTeams.classificationAllTeams(teams);
   }
 
-  public static getInfoMatchesAwayTeams(awayTeams: InfoTeamsAway[]) {
-    const infoMatches = awayTeams.map((el) => ({
-      awayTeam: el.teamAway?.teamName,
-      awayTeamGoals: el.awayTeamGoals,
-      homeTeams: el.homeTeam,
-      homeTeamGoals: el.homeTeamGoals,
+  public static classificationAllTeams(teams: Iclass[]) {
+    const totalTeams = teams.map((el) => ({
+      name: el.name,
+      totalPoints: teams.filter((team) => team.name === el.name).map((t) => t.totalPoints),
+      totalGames: teams.filter((team) => team.name === el.name).map((t) => t.totalGames),
+      totalVictories: teams.filter((team) => team.name === el.name).map((t) => t.totalVictories),
+      totalDraws: teams.filter((team) => team.name === el.name).map((t) => t.totalDraws),
+      totalLosses: teams.filter((team) => team.name === el.name).map((t) => t.totalLosses),
+      goalsFavor: teams.filter((team) => team.name === el.name).map((t) => t.goalsFavor),
+      goalsOwn: teams.filter((team) => team.name === el.name).map((t) => t.goalsOwn),
+      goalsBalance: teams.filter((team) => team.name === el.name).map((t) => t.goalsBalance),
     }));
-    return LeaderBoardAllTeams.getStaticsMatchesTeamAway(infoMatches);
+    return LeaderBoardAllTeams.sumTotals(totalTeams);
   }
 
-  public static getStaticsMatchesTeamAway(infoMatches: IstaticMatchesTeamAway[]) {
-    const staticMatches = infoMatches.map((el) => ({
-      name: el.awayTeam,
-      pointsVictory: infoMatches.filter((team) => team.awayTeam === el.awayTeam)
-        .map((victory) => (
-          (victory.awayTeamGoals > victory.homeTeamGoals) ? Number(3) : Number(0))),
-      totalGames: infoMatches.filter((team) => team.awayTeam === el.awayTeam)
-        .map((total) => (total.awayTeam ? Number(1) : Number(0))).reduce((a, b) => a + b),
-      pointsDraw: infoMatches.filter((team) => team.awayTeam === el.awayTeam)
-        .map((draw) => (draw.awayTeamGoals === draw.homeTeamGoals ? Number(1) : Number(0))),
-      loss: infoMatches.filter((team) => team.awayTeam === el.awayTeam)
-        .map((loss) => (loss.awayTeamGoals < loss.homeTeamGoals ? Number(1) : Number(0))),
-      goalsFavor: infoMatches.filter((team) => team.awayTeam === el.awayTeam)
-        .map((goals) => (goals.awayTeamGoals)),
-      goalsOwn: infoMatches.filter((team) => team.awayTeam === el.awayTeam)
-        .map((goals) => (goals.homeTeamGoals)),
+  public static sumTotals(totalTeams: IclassTotals[]) {
+    const totals = totalTeams.map((el) => ({
+      name: el.name,
+      totalPoints: el.totalPoints.reduce((a, b) => a + b),
+      totalGames: el.totalGames.reduce((a, b) => a + b),
+      totalVictories: el.totalVictories.reduce((a, b) => a + b),
+      totalDraws: el.totalDraws.reduce((a, b) => a + b),
+      totalLosses: el.totalLosses.reduce((a, b) => a + b),
+      goalsFavor: el.goalsFavor.reduce((a, b) => a + b),
+      goalsOwn: el.goalsOwn.reduce((a, b) => a + b),
+      goalsBalance: el.goalsBalance.reduce((a, b) => a + b),
     }));
-    return LeaderBoardAllTeams.getSumResults(staticMatches);
+    return LeaderBoardAllTeams.totalsTeams(totals);
   }
 
-  public static getSumResults(staticMatches: IstaticMatches[]) {
-    const totals = staticMatches.map((match) => ({
-      name: match.name,
-      totalPoints: match.pointsVictory.reduce((a, b) => a + b) + match.pointsDraw
-        .reduce((a, b) => a + b),
-      totalGames: match.totalGames,
-      totalVictories: match.pointsVictory.reduce((a, b) => a + b) / 3,
-      totalDraws: match.pointsDraw.reduce((a, b) => a + b),
-      totalLosses: match.loss.reduce((a, b) => a + b),
-      goalsFavor: match.goalsFavor.reduce((a, b) => a + b),
-      goalsOwn: match.goalsOwn.reduce((a, b) => a + b),
-      goalsBalance: match.goalsFavor
-        .reduce((a, b) => a + b) - match.goalsOwn.reduce((a, b) => a + b),
-      efficiency: match.pointsVictory.reduce((a, b) => a + b) + match.pointsDraw
-        .reduce((a, b) => a + b) / ((match.totalGames * 3) * Number(100)),
-    }));
-    return LeaderBoardAllTeams.totalsTeamsHome(totals);
-  }
-
-  public static totalsTeamsHome(totals: ITotalsStaticMatches[]) {
+  public static totalsTeams(totals: Iclass[]) {
     const setPerson = new Set();
 
     const filterTeams = totals.filter((team) => {
@@ -84,52 +78,15 @@ export default class LeaderBoardAllTeams {
       ...el,
       efficiency: ((el.totalPoints / (el.totalGames * 3)) * 100).toFixed(2),
     }));
-    LeaderBoardAllTeams.generateClassification(total);
+    LeaderBoardHomeTeams.generateClassification(total);
     return total;
   }
 
-  public static generateClassification(total: ITotalsStaticMatches[]) {
-    const classificationPoints = total.sort((a, b) => {
-      if (a.totalPoints > b.totalPoints) return -1;
-      if (a.totalPoints < b.totalPoints) return 1;
-      return 0;
-    });
-    return LeaderBoardAllTeams.dismemberGoasBalance(classificationPoints);
-  }
-
-  public static dismemberGoasBalance(classificationPoints: ITotalsStaticMatches[]) {
-    const classificationgoalsBalance = classificationPoints.sort((a, b) => {
-      if (a.totalPoints === b.totalPoints) {
-        if (a.goalsBalance > b.goalsBalance) return -1;
-        if (a.goalsBalance < b.goalsBalance) return 1;
-      }
-      return 0;
-    });
-    return LeaderBoardAllTeams.dismemberGoalsFavor(classificationgoalsBalance);
-  }
-
-  public static dismemberGoalsFavor(classificationgoalsBalance: ITotalsStaticMatches[]) {
-    const orderGoalsFavor = classificationgoalsBalance.sort((a, b) => {
-      if (a.totalPoints === b.totalPoints && a.goalsBalance === b.goalsBalance) {
-        if (a.goalsFavor > b.goalsFavor) return -1;
-        if (a.goalsFavor < b.goalsFavor) return 1;
-      }
-      return 0;
-    });
-    return LeaderBoardAllTeams.dismemberGoalsOwn(orderGoalsFavor);
-  }
-
-  public static dismemberGoalsOwn(orderGoalsFavor: ITotalsStaticMatches[]) {
-    const orderGoalsOwn = orderGoalsFavor.sort((a, b) => {
-      if (a.totalPoints === b.totalPoints && a.goalsBalance === b.goalsBalance) {
-        if (a.goalsFavor === b.goalsFavor) {
-          if (a.goalsOwn > b.goalsOwn) return 1;
-          if (a.goalsOwn < b.goalsOwn) return -1;
-        }
-        return 0;
-      }
-      return 0;
-    });
-    return orderGoalsOwn;
+  public static generateClassification(total: Iclass[]) {
+    const classificationPoints = total.sort((a, b) => b.totalPoints - a.totalPoints
+      || b.goalsBalance - a.goalsBalance
+      || b.goalsFavor - a.goalsFavor
+      || a.goalsOwn - b.goalsOwn);
+    return classificationPoints;
   }
 }

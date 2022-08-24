@@ -18,3 +18,16 @@ export interface IHomeTeamsInfos<T> {
   teamHome?: { id?: number, teamName?: string };
   getNameTeams(homeTeams: MatchesModel[]): Promise<T>
 }
+
+export interface Iclass {
+  name?: string,
+  totalPoints: number,
+  totalGames: number,
+  totalVictories: number,
+  totalDraws: number,
+  totalLosses: number,
+  goalsFavor: number,
+  goalsOwn: number,
+  goalsBalance: number,
+  efficiency?: string,
+}
